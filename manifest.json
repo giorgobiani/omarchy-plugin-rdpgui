@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "shota.rdp",
+  "name": "Remote Desktop",
+  "version": "1.0.0",
+  "author": "shota",
+  "license": "MIT",
+  "description": "Remote Desktop (RDP) bookmarks in the bar: saved credentials, certificate trust, linked VPN and live sessions, powered by FreeRDP.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Remote Desktop",
+    "description": "Connect to Windows machines over RDP, with linked VPN profiles and keyring-stored passwords.",
+    "category": "Network",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "refreshIntervalSec": 5
+    },
+    "schema": [
+      {
+        "key": "refreshIntervalSec",
+        "type": "integer",
+        "label": "Refresh interval (seconds)",
+        "min": 2,
+        "max": 600,
+        "step": 1,
+        "defaultValue": 5
+      }
+    ]
+  }
+}
