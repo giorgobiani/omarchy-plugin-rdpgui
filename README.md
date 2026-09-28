@@ -82,7 +82,8 @@ Also remove the `omarchy-rdp-` window rule from `~/.config/hypr/hyprland.lua`.
    - **Computer**: host name or IP, optionally with a port
      (`pc01.corp.example.com`, `10.0.0.5:3390`, `[fe80::1]:3389`)
    - optionally **Username**, **Domain**, and **Remember password**
-   - **Connect VPN first**: pick one of your OpenConnect VPN profiles to have
+   - **Connect VPN first**: pick one of your VPN profiles (OpenConnect or
+     OpenVPN, from [omarchy-plugin-vpngui](https://github.com/giorgobiani/omarchy-plugin-vpngui)) to have
      it connected before the session starts
 3. Click the bookmark to connect. Clicking a bookmark whose session is
    already open brings that window to the front.
@@ -158,7 +159,9 @@ omarchy-shell shota.rdp status                      # e.g. "1 session open"
 
 1. **VPN**: if the bookmark has a linked VPN that isn't up, it asks the VPN
    widget to connect it (`omarchy-shell shota.openconnect connect <uuid>`)
-   and waits until NetworkManager reports it active. The VPN widget shows its
+   and waits until the widget reports it active (`omarchy-shell
+   shota.openconnect profiles`; straight from NetworkManager when the widget
+   isn't loaded). The VPN widget shows its
    own password / SMS / SSO prompts.
 2. **Certificate**: RDP only switches to TLS after an X.224 exchange, so the
    helper does that exchange itself and reads the server certificate. A
@@ -202,7 +205,7 @@ Read the code before you enable it.
 - **"FreeRDP isn't installed"**: `omarchy pkg add freerdp`.
 - **Login hangs for about 30 seconds, then fails**: turn *Use Kerberos* off
   for that bookmark.
-- **"Enable the OpenConnect VPN widget …"**: the bookmark has a linked VPN,
+- **"Enable the VPN widget …"**: the bookmark has a linked VPN,
   but [omarchy-plugin-vpngui](https://github.com/giorgobiani/omarchy-plugin-vpngui)
   isn't installed and enabled.
 - **Session opens floating / at the wrong size**: add the window rule above.

@@ -166,7 +166,18 @@ def screen_size():
 
 
 def vpn_profiles():
-    """OpenConnect profiles straight from NetworkManager, the source of truth."""
+    """Every profile the VPN widget knows (OpenConnect, OpenVPN, OpenVPN 3 SSO);
+    straight from NetworkManager when the widget isn't loaded."""
+    listed = vpn_widget("profiles")
+    if listed:
+        try:
+            profiles = [{"uuid": p["uuid"], "name": p["name"], "state": p.get("state", "")}
+                        for p in json.loads(listed)]
+            if profiles:
+                return profiles
+        except (ValueError, KeyError, TypeError):
+            pass
+
     def terse(*args):
         res = subprocess.run(["nmcli", "-t", *args], capture_output=True, text=True)
         return [re.split(r"(?<!\\):", l) for l in res.stdout.splitlines()]
@@ -178,7 +189,7 @@ def vpn_profiles():
         uuid = row[1]
         service = subprocess.run(["nmcli", "-g", "vpn.service-type", "connection", "show", uuid],
                                  capture_output=True, text=True).stdout.strip()
-        if service.endswith(".openconnect"):
+        if service.endswith((".openconnect", ".openvpn")):
             out.append({"uuid": uuid, "name": row[0].replace("\\:", ":"), "state": active.get(uuid, "")})
     return out
 
@@ -383,7 +394,7 @@ class Session:
         emit("state", state="vpn", text="Connecting %s…" % profile["name"])
         # The VPN widget owns its own login prompts (password, SMS, SSO…).
         if vpn_widget("connect", vpn) is None:
-            emit("error", text="Enable the OpenConnect VPN widget to connect %s" % profile["name"])
+            emit("error", text="Enable the VPN widget (omarchy-plugin-vpngui) to connect %s" % profile["name"])
             return False
         start = time.time()
         while time.time() < start + VPN_TIMEOUT:
