@@ -34,6 +34,9 @@ omarchy plugin add https://github.com/giorgobiani/omarchy-plugin-rdpgui.git --en
 terminal, it also asks which bar section the widget goes in (the default is
 right).
 
+If any required package is missing, the panel says which and offers an
+**Install** button that runs `omarchy pkg add` in a terminal.
+
 ### Add the window rule (recommended)
 
 Plugins can't install Hyprland window rules, so add this line to

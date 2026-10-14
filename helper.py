@@ -36,6 +36,8 @@ LOG_DIR = os.path.join(os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.c
 KEYRING_SERVICE = "omarchy-rdp"
 VPN_PLUGIN = "shota.openconnect"   # talked to only through its IPC target
 CLIENT = "sdl-freerdp3"
+# Needed for every bookmark; the panel offers to install whatever is missing.
+REQUIRED_PACKAGES = ("freerdp", "libsecret", "gnome-keyring")
 APP_PREFIX = "omarchy-rdp-"
 WINDOW_TIMEOUT = 90
 VPN_TIMEOUT = 240
@@ -211,8 +213,18 @@ def cmd_list():
         public["trusted"] = bool(item.get("certPin"))
         out.append(public)
     json.dump({"connections": out, "vpns": vpn_profiles(),
-               "clientInstalled": bool(subprocess.run(["which", CLIENT], capture_output=True).returncode == 0)},
+               "clientInstalled": bool(subprocess.run(["which", CLIENT], capture_output=True).returncode == 0),
+               "missing": missing_packages(REQUIRED_PACKAGES)},
               sys.stdout)
+
+
+def missing_packages(packages):
+    """The packages pacman doesn't have installed (`pacman -T` prints exactly those)."""
+    try:
+        res = subprocess.run(["pacman", "-T", *packages], capture_output=True, text=True)
+    except OSError:
+        return []
+    return res.stdout.split() if res.returncode == 127 else []
 
 
 def cmd_focus(cid):

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "shota.rdp",
   "name": "Remote Desktop",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "shota",
   "license": "MIT",
   "description": "Remote Desktop (RDP) bookmarks in the bar: saved credentials, certificate trust, linked VPN and live sessions, powered by FreeRDP.",

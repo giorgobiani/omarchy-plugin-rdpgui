@@ -190,14 +190,31 @@ Panel {
             }
           }
 
-          Text {
-            visible: !rdp.clientInstalled
+          RowLayout {
+            visible: rdp.missingPackages.length > 0
             width: parent.width
-            text: "FreeRDP isn't installed. Run: omarchy pkg add freerdp"
-            color: root.urgent
-            font.family: root.fontFamily
-            font.pixelSize: Style.font.bodySmall
-            wrapMode: Text.WordWrap
+            spacing: Style.space(8)
+
+            Text {
+              Layout.fillWidth: true
+              text: "Missing packages: " + rdp.missingPackages.join(", ")
+              textFormat: Text.PlainText
+              color: root.urgent
+              font.family: root.fontFamily
+              font.pixelSize: Style.font.bodySmall
+              wrapMode: Text.WordWrap
+            }
+
+            Button {
+              text: "Install"
+              bordered: true
+              foreground: root.foreground
+              fontFamily: root.fontFamily
+              onClicked: {
+                rdp.installMissing()
+                root.close()
+              }
+            }
           }
 
           PromptCard {

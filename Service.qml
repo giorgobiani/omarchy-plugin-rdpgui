@@ -10,6 +10,8 @@ Item {
   property var connections: []
   property var vpns: []
   property bool clientInstalled: true
+  // Required packages pacman doesn't have yet; the panel offers to install them.
+  property var missingPackages: []
   // idle | vpn | checking | prompt | connecting
   property string phase: "idle"
   property string activeId: ""
@@ -30,6 +32,14 @@ Item {
 
   function refresh() {
     if (!listProcess.running) listProcess.running = true
+  }
+
+  // Runs `omarchy pkg add` in Omarchy's floating terminal, where sudo can ask
+  // for the password. The panel picks up the result on its next refresh.
+  function installMissing() {
+    if (missingPackages.length === 0) return
+    Quickshell.execDetached(["omarchy-launch-floating-terminal-with-presentation",
+                             "omarchy pkg add " + missingPackages.join(" ")])
   }
 
   function connectionById(id) {
@@ -123,6 +133,7 @@ Item {
           root.connections = parsed.connections || []
           root.vpns = parsed.vpns || []
           root.clientInstalled = parsed.clientInstalled !== false
+          root.missingPackages = parsed.missing || []
         } catch (e) {
           root.lastError = "Could not read Remote Desktop bookmarks"
         }
